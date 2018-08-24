@@ -1,0 +1,2 @@
+# Hide package-lock file in diff:
+package-lock.json -diff
