@@ -24,20 +24,30 @@
 
 		viewer.addHandler('zoom', handleViewportChange);
 		viewer.addHandler('pan', handleViewportChange);
+
+		document.body.addEventListener('focusin', handleFocusChange);
 	}
 
 	function handleViewportChange() {
 		var key = getCurrentFieldKey();
 		if (!key) return;
-		var pos = viewport.getCenter();
-		var zoom = viewport.getZoom();
+		saveViewportSettings(key);
+	}
 
-		fieldSettings[key] = {
-			pos: pos,
-			zoom: zoom,
-		};
+	function handleFocusChange(ev) {
+		if (angular.element(ev.target).closest('.entry-field').length === 0) return;
+		var key = getCurrentFieldKey();
+		if (!key) return;
+		handleFieldFocused(key);
+	}
 
-		console.log(fieldSettings);
+	function handleFieldFocused(key) {
+		var settings = fieldSettings[key];
+		if (settings) {
+			loadViewportSettings(settings);
+		} else {
+			saveViewportSettings(key);
+		}
 	}
 
 	function getCurrentFieldKey() {
@@ -47,6 +57,29 @@
 		if (!idEl) return null;
 		var id = idEl.id;
 		return id;
+	}
+
+	function saveViewportSettings(key) {
+		var pos = viewport.getCenter();
+		var zoom = viewport.getZoom();
+
+		fieldSettings[key] = {
+			pos: pos,
+			zoom: zoom,
+		};
+	}
+
+	function loadViewportSettings(settings) {
+		if (typeof settings.pos.x !== 'number'
+				|| typeof settings.pos.y !== 'number'
+				|| typeof settings.zoom !== 'number') {
+			return console.error("invalid settings");
+		}
+
+		viewport.panTo(settings.pos);
+		var currentZoom = viewport.getZoom();
+		var factor = settings.zoom / currentZoom;
+		viewport.zoomBy(factor);
 	}
 
 	//======================================================================
