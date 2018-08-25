@@ -4,6 +4,7 @@
 	var viewer,
 		viewport,
 		lastSelectedFieldKey = null,
+		lastImageIdx = 0,
 		fieldSettings = {};
 
 	waitForEl("idx-ribbon-viewer")
@@ -32,6 +33,11 @@
 	}
 
 	function handleViewportChange() {
+		var imageIdx = getCurrentImageIdx();
+		if (lastImageIdx !== imageIdx) {
+			lastImageIdx = imageIdx;
+			return; // Image just changed, so ignore viewport change.
+		}
 		var key = getCurrentFieldKey();
 		if (!key) return;
 		saveViewportSettings(key);
@@ -48,8 +54,6 @@
 		var settings = fieldSettings[key];
 		if (settings) {
 			loadViewportSettings(settings);
-		} else {
-			saveViewportSettings(key);
 		}
 	}
 
@@ -63,7 +67,7 @@
 	}
 
 	function saveViewportSettings(key) {
-		var pos = viewport.getCenter();
+		var pos = getViewportPos();
 		var zoom = viewport.getZoom();
 
 		fieldSettings[key] = {
@@ -79,10 +83,40 @@
 			return console.error("invalid settings");
 		}
 
-		viewport.panTo(settings.pos);
+		setViewportPos(settings.pos);
 		var currentZoom = viewport.getZoom();
 		var factor = settings.zoom / currentZoom;
 		viewport.zoomBy(factor);
+	}
+
+	function getViewportPos() {
+		var reference = getCurrentImage() || viewport;
+		return reference.viewportToImageCoordinates(viewport.getCenter())
+	}
+
+	function setViewportPos(pos) {
+		var reference = getCurrentImage() || viewport;
+		viewport.panTo(reference.imageToViewportCoordinates(pos.x, pos.y));
+	}
+
+	function getCurrentImage() {
+		var idx = getCurrentImageIdx();
+		if (idx !== -1) {
+			return viewer.world.getItemAt(idx);
+		}
+		return null;
+	}
+
+	function getCurrentImageIdx() {
+		var count = viewer.world.getItemCount();
+		for (var i = 0; i < count; i++) {
+			var item = viewer.world.getItemAt(i);
+			if (item.getOpacity && item.getOpacity() !== 0) {
+				return i;
+			}
+		}
+		console.warn("Current image not found :(");
+		return -1;
 	}
 
 	//======================================================================
