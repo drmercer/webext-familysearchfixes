@@ -10,5 +10,9 @@
       "matches": ["*://www.familysearch.org/indexing/batch/*"],
       "js": ["content_scripts/indexing.js"]
     }
+  ],
+
+  "web_accessible_resources": [
+    "page_scripts/*"
   ]
 }
