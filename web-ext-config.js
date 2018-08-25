@@ -3,8 +3,7 @@ module.exports = {
 	artifactsDir: 'build',
 
 	run: {
-		browserConsole: true,
-		startUrl: ['https://danmercer.net']
+		browserConsole: false,
+		startUrl: ['https://www.familysearch.org/indexing/my-indexing']
 	},
 };
-
