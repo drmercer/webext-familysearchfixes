@@ -6,5 +6,9 @@
   "description": "Enhances FamilySearch's functionality",
 
   "content_scripts": [
+    {
+      "matches": ["*://danmercer.net/*"],
+      "js": ["content_scripts/danmercer.net.js"]
+    }
   ]
 }

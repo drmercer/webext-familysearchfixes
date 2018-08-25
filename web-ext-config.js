@@ -1,4 +1,10 @@
 module.exports = {
 	sourceDir: 'src',
-	artifactsDir: 'build'
+	artifactsDir: 'build',
+
+	run: {
+		browserConsole: true,
+		startUrl: ['https://danmercer.net']
+	},
 };
+
