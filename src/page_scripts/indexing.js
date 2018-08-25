@@ -23,10 +23,12 @@
 
 		handleViewportChange();
 
-		viewer.addHandler('zoom', handleViewportChange);
-		viewer.addHandler('pan', handleViewportChange);
+		var handleViewportChangeDebounced = debounce(handleViewportChange, 200);
+		viewer.addHandler('zoom', handleViewportChangeDebounced);
+		viewer.addHandler('pan', handleViewportChangeDebounced);
 
-		document.body.addEventListener('focusin', handleFocusChange);
+		var handleFocusChangeDebounced = debounce(handleFocusChange, 200)
+		document.body.addEventListener('focusin', handleFocusChangeDebounced);
 	}
 
 	function handleViewportChange() {
@@ -103,6 +105,19 @@
 			} else {
 				setTimeout(checkForEl, interval);
 			}
+		}
+	}
+
+	function debounce(fn, delay) {
+		var timeout = -1;
+		return function() {
+			var nonce = Math.round(Math.random()*100000).toString(16);
+			var context = this;
+			var args = arguments;
+			clearTimeout(timeout);
+			timeout = setTimeout(function() {
+				fn.apply(context, args);
+			}, delay);
 		}
 	}
 
