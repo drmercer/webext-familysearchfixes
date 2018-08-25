@@ -1,20 +1,10 @@
 (function() {
 	"use strict";
 
-	const INTERVAL = 1000;
 	var viewer, viewport;
 
-	tryStart();
-
-	function tryStart() {
-		console.log("Try start");
-		var ribbonViewerEl = document.querySelector("idx-ribbon-viewer");
-		if (ribbonViewerEl) {
-			start(ribbonViewerEl);
-		} else {
-			setTimeout(tryStart, 1000);
-		}
-	}
+	waitForEl("idx-ribbon-viewer")
+		.then(start);
 
 	function start(ribbonViewerEl) {
 		console.log("Start");
@@ -43,4 +33,27 @@
 		ctr.x += 100
 		viewport.panTo(ctr);
 	}
+
+	//======================================================================
+	//			Utilities
+
+	function waitForEl(selector, interval) {
+		interval = interval || 1000;
+		var resolve;
+		var prom = new Promise(res => resolve = res);
+
+		checkForEl();
+
+		return prom;
+
+		function checkForEl() {
+			var el = document.querySelector(selector);
+			if (el) {
+				resolve(el);
+			} else {
+				setTimeout(checkForEl, interval);
+			}
+		}
+	}
+
 }())
