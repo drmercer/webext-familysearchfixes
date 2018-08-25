@@ -3,6 +3,7 @@
 
 	var viewer,
 		viewport,
+		lastSelectedFieldKey = null,
 		fieldSettings = {};
 
 	waitForEl("idx-ribbon-viewer")
@@ -52,11 +53,11 @@
 
 	function getCurrentFieldKey() {
 		var field = document.querySelector('.entry-field.focus');
-		if (!field) return null;
+		if (!field) return lastSelectedFieldKey;
 		var idEl = field.querySelector('*[id^="entryFieldformEntry"]');
-		if (!idEl) return null;
-		var id = idEl.id;
-		return id;
+		if (!idEl) return lastSelectedFieldKey;
+		lastSelectedFieldKey = idEl.id || lastSelectedFieldKey;
+		return lastSelectedFieldKey;
 	}
 
 	function saveViewportSettings(key) {
