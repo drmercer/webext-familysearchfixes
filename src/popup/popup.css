@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100vw;
+  min-width: 350px;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  background-color: #6AAD30;
+}
+
+body {
+  background-color: white;
+}
+
+header {
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+  background-color: #6AAD30;
+  color: white;
+}
+
+main {
+  padding: 15px;
+}
+
+main input {
+  vertical-align: middle;
+}
+
+footer {
+	text-align: center;
+  font-size: .6em;
+  padding: 8px;
+  width: 100%;
+  background-color: #6AAD30;
+  color: white;
+}
+
+footer a {
+  color: inherit;
+}
